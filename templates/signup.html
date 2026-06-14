@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block titulo %}CRIAR CONTA - PRAZER BURGUER{% endblock %}
+
+{% block conteudo %}
+<section class="auth-card">
+  <h1><i class="bi bi-person-plus-fill"></i> Junte-se a nós</h1>
+  <p>Crie a sua conta para guardar o seu perfil e pedir com confiança.</p>
+  <form method="post" class="auth-form">
+    <label for="nome"><i class="bi bi-person-fill"></i> Nome completo</label>
+    <input type="text" id="nome" name="nome" required placeholder="Ex.: Maria João">
+
+    <label for="email"><i class="bi bi-envelope-fill"></i> E-mail</label>
+    <input type="email" id="email" name="email" required placeholder="nome@prazerburguer.ao">
+
+    <label for="senha"><i class="bi bi-key-fill"></i> Palavra-passe</label>
+    <input type="password" id="senha" name="senha" required placeholder="Mínimo 6 caracteres">
+
+    <label for="confirmar_senha"><i class="bi bi-check-circle-fill"></i> Confirmar palavra-passe</label>
+    <input type="password" id="confirmar_senha" name="confirmar_senha" required placeholder="Repita a palavra-passe">
+
+    <button type="submit" class="btn-primary">Criar conta</button>
+  </form>
+  <p class="mini-text">Já tem conta? <a href="{{ url_for('login') }}">Entre aqui</a>.</p>
+</section>
+{% endblock %}

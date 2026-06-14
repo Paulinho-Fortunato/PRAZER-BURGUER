@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block titulo %}CHECKOUT - PRAZER BURGUER{% endblock %}
+
+{% block conteudo %}
+<section class="checkout-page">
+    <div class="checkout-header">
+        <h1><i class="bi bi-bag-check-fill"></i> Finalizar Pedido</h1>
+        <p>Preencha os seus dados para confirmar a entrega.</p>
+    </div>
+
+    <div class="checkout-layout">
+
+        <!-- Formulário -->
+        <div class="checkout-form-wrapper">
+            <form method="POST" action="{{ url_for('checkout') }}" class="checkout-form">
+
+                <div class="form-section">
+                    <h2 class="form-section-titulo">
+                        <span class="form-step">1</span>
+                        <i class="bi bi-person-fill"></i> Dados Pessoais
+                    </h2>
+                    <div class="form-group">
+                        <label for="nome">
+                            <i class="bi bi-person"></i> Nome completo
+                        </label>
+                        <input type="text" id="nome" name="nome" required
+                            placeholder="Ex: João Silva"
+                            value="{{ user.nome if user else '' }}">
+                    </div>
+                    <div class="form-group">
+                        <label for="telefone">
+                            <i class="bi bi-telephone"></i> Telefone
+                        </label>
+                        <input type="tel" id="telefone" name="telefone" required
+                            placeholder="Ex: +244 900 000 000">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2 class="form-section-titulo">
+                        <span class="form-step">2</span>
+                        <i class="bi bi-geo-alt-fill"></i> Endereço de Entrega
+                    </h2>
+                    <div class="form-group">
+                        <label for="morada">
+                            <i class="bi bi-house"></i> Morada completa
+                        </label>
+                        <textarea id="morada" name="morada" required rows="3"
+                            placeholder="Ex: Rua da Liberdade, nº 25, Kilamba, Luanda"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2 class="form-section-titulo">
+                        <span class="form-step">3</span>
+                        <i class="bi bi-credit-card-fill"></i> Método de Pagamento
+                    </h2>
+                    <div class="pagamento-opcoes">
+                        <label class="pagamento-opcao">
+                            <input type="radio" name="pagamento" value="multicaixa" required>
+                            <div class="pagamento-card">
+                                <i class="bi bi-credit-card"></i>
+                                <span>Multicaixa Express</span>
+                            </div>
+                        </label>
+                        <label class="pagamento-opcao">
+                            <input type="radio" name="pagamento" value="dinheiro">
+                            <div class="pagamento-card">
+                                <i class="bi bi-cash-coin"></i>
+                                <span>Dinheiro na Entrega</span>
+                            </div>
+                        </label>
+                        <label class="pagamento-opcao">
+                            <input type="radio" name="pagamento" value="transferencia">
+                            <div class="pagamento-card">
+                                <i class="bi bi-bank"></i>
+                                <span>Transferência Bancária</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-confirmar">
+                    <i class="bi bi-check-circle-fill"></i>
+                    Confirmar Pedido — {{ format_kz(total) }}
+                </button>
+
+            </form>
+        </div>
+
+        <!-- Resumo do pedido -->
+        <aside class="checkout-resumo">
+            <div class="resumo-card">
+                <h2 class="resumo-titulo">
+                    <i class="bi bi-bag-fill"></i> O seu pedido
+                </h2>
+
+                <div class="checkout-itens">
+                    {% for item in itens %}
+                    <div class="checkout-item">
+                        <img src="{{ url_for('static', filename='assets/' + item.get('imagem', 'hamburger.svg')) }}"
+                            alt="{{ item.nome }}" class="checkout-item-img">
+                        <div class="checkout-item-info">
+                            <span class="checkout-item-nome">{{ item.nome }}</span>
+                            <span class="checkout-item-qty">x{{ item.quantidade }}</span>
+                        </div>
+                        <span class="checkout-item-preco">
+                            {{ format_kz(item.preco * item.quantidade) }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <div class="resumo-linhas">
+                    <div class="resumo-linha">
+                        <span>Subtotal</span>
+                        <span>{{ format_kz(subtotal) }}</span>
+                    </div>
+                    {% if desconto > 0 %}
+                    <div class="resumo-linha desconto-linha">
+                        <span><i class="bi bi-tag-fill"></i> Desconto</span>
+                        <span>- {{ format_kz(desconto) }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="resumo-linha">
+                        <span>Entrega</span>
+                        <span class="texto-sucesso">Grátis</span>
+                    </div>
+                    <div class="resumo-divider"></div>
+                    <div class="resumo-linha resumo-total">
+                        <span>Total</span>
+                        <span>{{ format_kz(total) }}</span>
+                    </div>
+                </div>
+
+                <div class="resumo-info">
+                    <div class="info-item">
+                        <i class="bi bi-clock-fill"></i>
+                        <span>Entrega 20-30 min</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-shield-check"></i>
+                        <span>Pagamento 100% seguro</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+</section>
+{% endblock %}

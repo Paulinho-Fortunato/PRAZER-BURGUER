@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block titulo %}LOGIN - PRAZER BURGUER{% endblock %}
+
+{% block conteudo %}
+<section class="auth-card">
+  <h1><i class="bi bi-box-arrow-in-right"></i> Entre na conta</h1>
+  <p>Use as suas credenciais para continuar com segurança e rapidez.</p>
+  <form method="post" class="auth-form">
+    <label for="email"><i class="bi bi-envelope-fill"></i> E-mail</label>
+    <input type="email" id="email" name="email" required placeholder="nome@prazerburguer.ao">
+
+    <label for="senha"><i class="bi bi-key-fill"></i> Palavra-passe</label>
+    <input type="password" id="senha" name="senha" required placeholder="••••••••">
+
+    <button type="submit" class="btn-primary">Entrar agora</button>
+  </form>
+  <p class="mini-text">Ainda não tem conta? <a href="{{ url_for('signup') }}">Crie uma aqui</a>.</p>
+</section>
+{% endblock %}

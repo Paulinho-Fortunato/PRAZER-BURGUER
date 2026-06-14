@@ -1,0 +1,21 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Copo -->
+  <path d="M 30 25 L 35 85 Q 35 95 45 95 L 75 95 Q 85 95 85 85 L 90 25 Z" fill="#e74c3c" stroke="#c0392b" stroke-width="2"/>
+  
+  <!-- Brilho no copo -->
+  <ellipse cx="50" cy="45" rx="8" ry="15" fill="#fff" opacity="0.3"/>
+  
+  <!-- Refrigerante dentro -->
+  <path d="M 35 50 L 40 85 Q 40 92 48 92 L 72 92 Q 80 92 80 85 L 85 50 Z" fill="#d32f2f" opacity="0.6"/>
+  
+  <!-- Gelo (opcional) -->
+  <rect x="50" y="55" width="8" height="12" fill="#e8f4f8" opacity="0.7"/>
+  <rect x="65" y="60" width="8" height="12" fill="#e8f4f8" opacity="0.7"/>
+  
+  <!-- Canudo -->
+  <rect x="55" y="15" width="5" height="40" fill="#FFD700" rx="2"/>
+  <circle cx="57.5" cy="18" r="4" fill="#FFA500"/>
+  
+  <!-- Sombra -->
+  <ellipse cx="60" cy="110" rx="40" ry="6" fill="#000" opacity="0.15"/>
+</svg>

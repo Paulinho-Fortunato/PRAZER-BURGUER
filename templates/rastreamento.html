@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block titulo %}PEDIDO #{{ pedido.id }} - PRAZER BURGUER{% endblock %}
+
+{% block conteudo %}
+<section class="rastreamento-page">
+
+    <div class="rastreamento-header">
+        <div class="rastreamento-id">
+            <i class="bi bi-bag-check-fill"></i>
+            <div>
+                <h1>Pedido <span>#{{ pedido.id }}</span></h1>
+                <p>{{ pedido.data }}</p>
+            </div>
+        </div>
+        <div class="rastreamento-status-badge"
+            style="background: {{ status_info[pedido.status].cor }}20; 
+                   border-color: {{ status_info[pedido.status].cor }}; 
+                   color: {{ status_info[pedido.status].cor }};">
+            <i class="bi {{ status_info[pedido.status].icone }}"></i>
+            {{ status_info[pedido.status].label }}
+        </div>
+    </div>
+
+    <!-- Barra de progresso -->
+    <div class="progresso-container">
+        {% set etapas = ['pendente', 'confirmado', 'preparando', 'entregando', 'entregue'] %}
+        {% set status_atual = pedido.status %}
+        {% set idx_atual = etapas.index(status_atual) if status_atual in etapas else 0 %}
+
+        <div class="progresso-barra">
+            {% for etapa in etapas %}
+            {% set idx = loop.index0 %}
+            <div class="progresso-etapa {{ 'ativa' if idx <= idx_atual else '' }} {{ 'completa' if idx < idx_atual else '' }}">
+                <div class="etapa-circulo">
+                    {% if idx < idx_atual %}
+                    <i class="bi bi-check2"></i>
+                    {% else %}
+                    <i class="bi {{ status_info[etapa].icone }}"></i>
+                    {% endif %}
+                </div>
+                <span class="etapa-label">{{ status_info[etapa].label }}</span>
+            </div>
+            {% if not loop.last %}
+            <div class="progresso-linha {{ 'completa' if idx < idx_atual else '' }}"></div>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="rastreamento-layout">
+
+        <!-- Detalhes do pedido -->
+        <div class="rastreamento-detalhes">
+            <div class="detalhe-card">
+                <h2><i class="bi bi-person-fill"></i> Cliente</h2>
+                <p><strong>{{ pedido.cliente }}</strong></p>
+                <p><i class="bi bi-telephone"></i> {{ pedido.telefone }}</p>
+                <p><i class="bi bi-geo-alt"></i> {{ pedido.morada }}</p>
+                <p><i class="bi bi-credit-card"></i> {{ pedido.pagamento | capitalize }}</p>
+            </div>
+
+            <div class="detalhe-card">
+                <h2><i class="bi bi-bag-fill"></i> Itens do Pedido</h2>
+                {% for item in pedido.itens %}
+                <div class="rastreamento-item">
+                    <img src="{{ url_for('static', filename='assets/' + item.get('imagem', 'hamburger.svg')) }}"
+                        alt="{{ item.nome }}" class="rastreamento-item-img">
+                    <div class="rastreamento-item-info">
+                        <span>{{ item.nome }}</span>
+                        <small>x{{ item.quantidade }}</small>
+                    </div>
+                    <span class="rastreamento-item-preco">
+                        {{ format_kz(item.preco * item.quantidade) }}
+                    </span>
+                </div>
+                {% endfor %}
+
+                <div class="resumo-linhas" style="margin-top: 1rem;">
+                    {% if pedido.desconto > 0 %}
+                    <div class="resumo-linha desconto-linha">
+                        <span>Desconto</span>
+                        <span>- {{ format_kz(pedido.desconto) }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="resumo-divider"></div>
+                    <div class="resumo-linha resumo-total">
+                        <span>Total pago</span>
+                        <span>{{ format_kz(pedido.total) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ações -->
+        <div class="rastreamento-acoes">
+            <a href="{{ url_for('index') }}" class="btn-primary" style="width:100%; justify-content:center;">
+                <i class="bi bi-house-fill"></i> Voltar ao Início
+            </a>
+            <a href="{{ url_for('cardapio') }}" class="btn-secondary" style="width:100%; justify-content:center; margin-top: 0.8rem;">
+                <i class="bi bi-grid-3x3-gap-fill"></i> Pedir novamente
+            </a>
+        </div>
+
+    </div>
+</section>
+{% endblock %}

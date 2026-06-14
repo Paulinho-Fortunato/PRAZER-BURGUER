@@ -1,0 +1,18 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Base da pizza -->
+  <path d="M 60 15 L 100 80 L 60 95 L 20 80 Z" fill="#E8B34A" stroke="#ff6b35" stroke-width="2"/>
+  
+  <!-- Molho -->
+  <path d="M 60 20 L 95 75 L 60 88 L 25 75 Z" fill="#C1440E" opacity="0.8"/>
+  
+  <!-- Queijo -->
+  <path d="M 62 22 L 93 73 L 62 86 L 31 73 Z" fill="#FFD700" opacity="0.7"/>
+  
+  <!-- Manjericão -->
+  <circle cx="50" cy="55" r="4" fill="#7cb342"/>
+  <circle cx="70" cy="50" r="4" fill="#7cb342"/>
+  <circle cx="60" cy="65" r="4" fill="#7cb342"/>
+  
+  <!-- Sombra -->
+  <ellipse cx="60" cy="110" rx="45" ry="6" fill="#000" opacity="0.15"/>
+</svg>

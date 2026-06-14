@@ -1,0 +1,27 @@
+<svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <!-- Prato -->
+  <ellipse cx="60" cy="85" rx="45" ry="12" fill="#e8d9c3" stroke="#daa571" stroke-width="2"/>
+  
+  <!-- Batatas -->
+  <g>
+    <!-- Batata 1 -->
+    <rect x="25" y="55" width="12" height="35" fill="#E8B34A" rx="2" stroke="#d4a042" stroke-width="1"/>
+    <!-- Batata 2 -->
+    <rect x="40" y="45" width="12" height="45" fill="#F0BB4A" rx="2" stroke="#e0a840" stroke-width="1"/>
+    <!-- Batata 3 -->
+    <rect x="55" y="40" width="12" height="50" fill="#E8B34A" rx="2" stroke="#d4a042" stroke-width="1"/>
+    <!-- Batata 4 -->
+    <rect x="70" y="48" width="12" height="42" fill="#F0BB4A" rx="2" stroke="#e0a840" stroke-width="1"/>
+    <!-- Batata 5 -->
+    <rect x="85" y="58" width="12" height="32" fill="#E8B34A" rx="2" stroke="#d4a042" stroke-width="1"/>
+  </g>
+  
+  <!-- Sal/Tempero -->
+  <circle cx="30" cy="60" r="1" fill="#fff" opacity="0.8"/>
+  <circle cx="50" cy="50" r="1" fill="#fff" opacity="0.8"/>
+  <circle cx="65" cy="45" r="1" fill="#fff" opacity="0.8"/>
+  <circle cx="80" cy="55" r="1" fill="#fff" opacity="0.8"/>
+  
+  <!-- Sombra -->
+  <ellipse cx="60" cy="110" rx="45" ry="6" fill="#000" opacity="0.15"/>
+</svg>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-AO">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='assets/favicon.svg')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='assets/icons/bootstrap-icons.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css')}}">
+    <title>{% block titulo %}PRAZER BURGER{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <img src="{{ url_for('static', filename='assets/logo-clean.svg') }}" alt="Logo Prazer Burger" class="logo-img">
+            <a class="logo-text" href="{{ url_for('index') }}">PRAZER BURGER</a>
+        </div>
+
+        <!-- BOTÃO HAMBÚRGUER -->
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu" aria-expanded="false">
+            <span class="hamburger-box">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </span>
+        </button>
+
+        <!-- OVERLAY -->
+        <div class="menu-overlay" id="menuOverlay"></div>
+
+        <!-- MENU NAVEGAÇÃO -->
+        <nav class="menu" id="menuNav" role="navigation">
+            <!-- Cabeçalho dentro do menu mobile -->
+            <div class="menu-header">
+                <img src="{{ url_for('static', filename='assets/logo-clean.svg') }}" alt="Logo" class="menu-logo">
+                <span class="menu-title">PRAZER BURGER</span>
+            </div>
+
+            <div class="menu-links">
+                <a href="{{ url_for('index') }}">
+                    <i class="bi bi-house-fill"></i>
+                    <span>HOME</span>
+                </a>
+                <a href="{{ url_for('cardapio') }}">
+                    <i class="bi bi-grid-3x3-gap-fill"></i>
+                    <span>CARDÁPIO</span>
+                </a>
+                <a href="{{ url_for('carrinho') }}" class="menu-link-carrinho">
+    <span class="carrinho-icon-wrapper">
+        <i class="bi bi-cart-fill"></i>
+        {% if carrinho_total > 0 %}
+        <span class="carrinho-count">{{ carrinho_total }}</span>
+        {% endif %}
+    </span>
+    <span>CARRINHO</span>
+</a>
+                <a href="{{ url_for('conta') }}">
+                    <i class="bi bi-person-fill"></i>
+                    <span>CONTA</span>
+                </a>
+                {% if session.get('user') %}
+                <a href="{{ url_for('logout') }}" class="menu-link-sair">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>SAIR</span>
+                </a>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="menu-link-login">
+                    <i class="bi bi-box-arrow-in-right"></i>
+                    <span>LOGIN</span>
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- Rodapé dentro do menu mobile -->
+            <div class="menu-footer">
+                <p>🍔 Hambúrgueres Artesanais</p>
+                <p>Cazenga, Luanda</p>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <section class="flash-messages">
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">{{ message }}</div>
+              {% endfor %}
+            </section>
+          {% endif %}
+        {% endwith %}
+        {% block conteudo %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <p><strong>PRAZER BURGER</strong> — Hambúrgueres artesanais em Luanda, Angola</p>
+            <p>Contacte-nos: 
+                <a href="https://www.facebook.com/profile.php?id=61550049302978" target="_blank">
+                    <i class="bi bi-facebook"></i> Facebook
+                </a>
+            </p>
+            <p>&copy; 2026 Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const hamburger = document.getElementById('hamburger');
+        const menuNav = document.getElementById('menuNav');
+        const menuOverlay = document.getElementById('menuOverlay');
+        const menuLinks = menuNav.querySelectorAll('.menu-links a');
+
+        function openMenu() {
+            hamburger.classList.add('active');
+            menuNav.classList.add('active');
+            menuOverlay.classList.add('active');
+            hamburger.setAttribute('aria-expanded', 'true');
+            document.body.classList.add('menu-open');
+        }
+
+        function closeMenu() {
+            hamburger.classList.remove('active');
+            menuNav.classList.remove('active');
+            menuOverlay.classList.remove('active');
+            hamburger.setAttribute('aria-expanded', 'false');
+            document.body.classList.remove('menu-open');
+        }
+
+        hamburger.addEventListener('click', () => {
+            const isOpen = hamburger.classList.contains('active');
+            isOpen ? closeMenu() : openMenu();
+        });
+
+        menuOverlay.addEventListener('click', closeMenu);
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMenu();
+        });
+
+        // Fechar menu se redimensionar para desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) closeMenu();
+        });
+
+        // Swipe para fechar (arrastar para direita)
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        menuNav.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        menuNav.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            if (touchEndX - touchStartX > 80) {
+                closeMenu();
+            }
+        }, { passive: true });
+    });
+    </script>
+</body>
+</html>

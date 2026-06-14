@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block titulo %}CONTA - PRAZER BURGUER{% endblock %}
+
+{% block conteudo %}
+  <section class="painel">
+    <h1>A sua conta</h1>
+    {% if user %}
+      <p style="font-size: 1.1rem;"><i class="bi bi-hand-thumbs-up-fill"></i> Bem-vindo, <strong>{{ user.nome }}</strong>!</p>
+      <p>E-mail: <strong>{{ user.email }}</strong></p>
+      <p style="margin-top: 1rem;">Pode continuar a pedir os seus favoritos com segurança e rapidez. Disfrute das promoções exclusivas para membros.</p>
+      <a class="btn-primary" href="{{ url_for('cardapio') }}" style="margin-top: 1.5rem;">Ir ao cardápio</a>
+    {% else %}
+      <p>Crie uma conta ou faça login para guardar o seu perfil e acompanhar os seus pedidos.</p>
+      <div class="botoes-acesso" style="margin-top: 1.5rem;">
+        <a class="btn-primary" href="{{ url_for('login') }}">Entrar</a>
+        <a class="btn-secondary" href="{{ url_for('signup') }}">Criar conta</a>
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

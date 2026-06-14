@@ -1,0 +1,30 @@
+<svg width="200" height="240" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+  <!-- Bandeira no topo -->
+  <rect x="90" y="5" width="20" height="35" fill="#ff6b35"/>
+  <polygon points="110,15 110,30 130,22.5" fill="#ff6b35"/>
+  
+  <!-- Pão de cima com sésamo -->
+  <ellipse cx="100" cy="50" rx="55" ry="22" fill="#ffd9b3" stroke="#ff6b35" stroke-width="2"/>
+  <circle cx="70" cy="48" r="3" fill="#ff6b35"/>
+  <circle cx="85" cy="40" r="3" fill="#ff6b35"/>
+  <circle cx="100" cy="38" r="3" fill="#ff6b35"/>
+  <circle cx="115" cy="40" r="3" fill="#ff6b35"/>
+  <circle cx="130" cy="48" r="3" fill="#ff6b35"/>
+  
+  <!-- Texto PRAZER -->
+  <text x="100" y="100" font-family="Arial, sans-serif" font-size="28" font-weight="bold" text-anchor="middle" fill="#fff5e6" stroke="#ff6b35" stroke-width="1">PRAZER</text>
+  
+  <!-- Texto BURGER -->
+  <text x="100" y="128" font-family="Arial, sans-serif" font-size="28" font-weight="bold" text-anchor="middle" fill="#fff5e6" stroke="#ff6b35" stroke-width="1">BURGER</text>
+  
+  <!-- Pão de baixo com sésamo -->
+  <ellipse cx="100" cy="160" rx="55" ry="22" fill="#ffd9b3" stroke="#ff6b35" stroke-width="2"/>
+  <circle cx="70" cy="162" r="3" fill="#ff6b35"/>
+  <circle cx="85" cy="170" r="3" fill="#ff6b35"/>
+  <circle cx="100" cy="172" r="3" fill="#ff6b35"/>
+  <circle cx="115" cy="170" r="3" fill="#ff6b35"/>
+  <circle cx="130" cy="162" r="3" fill="#ff6b35"/>
+  
+  <!-- Decoração inferior -->
+  <path d="M 50 190 Q 100 200 150 190" stroke="#ff6b35" stroke-width="2" fill="none" opacity="0.6"/>
+</svg>

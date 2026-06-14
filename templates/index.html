@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block titulo %}PRAZER BURGUER | Luanda, Angola{% endblock %}
+
+{% block conteudo %}
+  <section class="hero-card">
+    <h1>{{ info.titulo }}</h1>
+    <p>{{ info.descricao }}</p>
+    <p style="margin-top: 1.2rem;"><strong><i class="bi bi-clock-fill"></i> {{ info.horario }}</strong></p>
+    <p><strong><i class="bi bi-geo-alt-fill"></i> {{ info.local }}</strong></p>
+    <a class="btn-primary" href="{{ url_for('cardapio') }}" style="margin-top: 1.5rem;">Ver o cardápio completo</a>
+  </section>
+
+  <section class="grid-duas-colunas">
+    <article class="painel">
+      <h2><i class="bi bi-fire"></i> O nosso segredo</h2>
+      <p>Oferecemos refeições rápidas, sabor caseiro e um serviço pensado para quem quer comer bem em Luanda. Cada hambúrguer é feito à mão com ingredientes frescos e carne de qualidade.</p>
+    </article>
+    <article class="painel">
+      <h2><i class="bi bi-gift-fill"></i> Esta semana</h2>
+      <p>Hambúrguer duplo + batata frita com 10% de desconto para clientes registados. Não perca! Válido de segunda a domingo.</p>
+    </article>
+  </section>
+
+  <section>
+    <h2 style="text-align: center; margin-top: 3rem;">Porque nos escolhem</h2>
+    <div class="grid-duas-colunas" style="margin-top: 1.5rem;">
+      <article class="painel">
+        <p><strong><i class="bi bi-bag-fill"></i> Qualidade garantida</strong> — Carne fresca, pão macio e temperos que fazem a diferença.</p>
+      </article>
+      <article class="painel">
+        <p><strong><i class="bi bi-lightning-fill"></i> Rápido e eficiente</strong> — Pedido pronto em 15 minutos, sem comprometer o sabor.</p>
+      </article>
+      <article class="painel">
+        <p><strong><i class="bi bi-hand-thumbs-up-fill"></i> Equipa de confiança</strong> — Pessoal atencioso que trata cada cliente como amigo.</p>
+      </article>
+      <article class="painel">
+        <p><strong><i class="bi bi-cash-coin"></i> Bom preço</strong> — Refeições acessíveis sem sacrificar a qualidade.</p>
+      </article>
+    </div>
+  </section>
+{% endblock %}

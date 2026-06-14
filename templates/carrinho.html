@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+{% block titulo %}CARRINHO - PRAZER BURGUER{% endblock %}
+
+{% block conteudo %}
+<section class="carrinho-page">
+
+    <div class="carrinho-header">
+        <div class="carrinho-header-text">
+            <h1><i class="bi bi-cart-fill"></i> O seu carrinho</h1>
+            <p class="carrinho-subtitulo">Revise os seus itens antes de finalizar.</p>
+        </div>
+        {% if itens %}
+        <div class="carrinho-badge">
+            <span class="badge-numero">{{ carrinho_total }}</span>
+            <span class="badge-texto">{{ 'item' if carrinho_total == 1 else 'itens' }}</span>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if itens %}
+    <div class="carrinho-layout">
+
+        <!-- Lista de itens -->
+        <div class="carrinho-itens">
+            {% for item in itens %}
+            <article class="cart-item" style="animation-delay: {{ loop.index0 * 0.08 }}s">
+
+                <div class="cart-item-img-box">
+                    <img src="{{ url_for('static', filename='assets/' + item.get('imagem', 'hamburger.svg')) }}"
+                        alt="{{ item.nome }}" class="cart-item-img">
+                </div>
+
+                <div class="cart-item-info">
+                    <h3 class="cart-item-nome">{{ item.nome }}</h3>
+                    <p class="cart-item-preco-unit">{{ format_kz(item.preco) }} / un.</p>
+                    <p class="cart-item-preco">{{ format_kz(item.preco * item.quantidade) }}</p>
+                </div>
+
+                <!-- Controle de quantidade -->
+                <div class="cart-item-qty">
+                    <form method="POST" action="{{ url_for('atualizar_quantidade') }}">
+                        <input type="hidden" name="nome" value="{{ item.nome }}">
+                        <input type="hidden" name="acao" value="diminuir">
+                        <button type="submit" class="qty-btn qty-minus" title="Diminuir">
+                            <i class="bi bi-dash"></i>
+                        </button>
+                    </form>
+
+                    <span class="qty-numero">{{ item.quantidade }}</span>
+
+                    <form method="POST" action="{{ url_for('atualizar_quantidade') }}">
+                        <input type="hidden" name="nome" value="{{ item.nome }}">
+                        <input type="hidden" name="acao" value="aumentar">
+                        <button type="submit" class="qty-btn qty-plus" title="Aumentar">
+                            <i class="bi bi-plus"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Remover -->
+                <form method="POST" action="{{ url_for('remover_carrinho', nome=item.nome) }}">
+                    <button type="submit" class="btn-remover" title="Remover {{ item.nome }}">
+                        <i class="bi bi-trash3-fill"></i>
+                        <span class="btn-remover-text">Remover</span>
+                    </button>
+                </form>
+
+            </article>
+            {% endfor %}
+
+            <!-- Limpar carrinho -->
+            <form method="POST" action="{{ url_for('limpar_carrinho') }}">
+                <button type="submit" class="btn-limpar-lista"
+                    onclick="return confirm('Esvaziar o carrinho?')">
+                    <i class="bi bi-x-circle"></i> Esvaziar carrinho
+                </button>
+            </form>
+        </div>
+
+        <!-- Resumo lateral -->
+        <aside class="carrinho-resumo">
+            <div class="resumo-card">
+                <h2 class="resumo-titulo">
+                    <i class="bi bi-receipt"></i> Resumo
+                </h2>
+
+                <!-- Miniaturas -->
+                <div class="resumo-miniaturas">
+                    {% for item in itens %}
+                    <div class="resumo-mini-item">
+                        <img src="{{ url_for('static', filename='assets/' + item.get('imagem', 'hamburger.svg')) }}"
+                            alt="{{ item.nome }}" class="resumo-mini-img">
+                        <div class="resumo-mini-info">
+                            <span class="resumo-mini-nome">{{ item.nome }}</span>
+                            <span class="resumo-mini-preco">
+                                {{ item.quantidade }}x {{ format_kz(item.preco) }}
+                            </span>
+                        </div>
+                        <span class="resumo-mini-total">
+                            {{ format_kz(item.preco * item.quantidade) }}
+                        </span>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Cupão -->
+                <div class="cupao-section">
+                    {% if cupao %}
+                    <div class="cupao-ativo">
+                        <div class="cupao-ativo-info">
+                            <i class="bi bi-tag-fill"></i>
+                            <span>Cupão <strong>{{ cupao }}</strong> aplicado</span>
+                        </div>
+                        <form method="POST" action="{{ url_for('remover_cupao') }}">
+                            <button type="submit" class="cupao-remover">
+                                <i class="bi bi-x"></i>
+                            </button>
+                        </form>
+                    </div>
+                    {% else %}
+                    <form method="POST" action="{{ url_for('aplicar_cupao') }}" class="cupao-form">
+                        <input type="text" name="cupao" placeholder="Tens um cupão?" class="cupao-input"
+                            autocomplete="off" autocapitalize="characters">
+                        <button type="submit" class="cupao-btn">
+                            <i class="bi bi-check2"></i>
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+
+                <!-- Totais -->
+                <div class="resumo-linhas">
+                    <div class="resumo-linha">
+                        <span>Subtotal</span>
+                        <span>{{ format_kz(subtotal) }}</span>
+                    </div>
+                    {% if desconto > 0 %}
+                    <div class="resumo-linha desconto-linha">
+                        <span><i class="bi bi-tag-fill"></i> Desconto ({{ cupao }})</span>
+                        <span>- {{ format_kz(desconto) }}</span>
+                    </div>
+                    {% endif %}
+                    <div class="resumo-linha">
+                        <span>Entrega</span>
+                        <span class="texto-sucesso">Grátis</span>
+                    </div>
+                    <div class="resumo-divider"></div>
+                    <div class="resumo-linha resumo-total">
+                        <span>Total</span>
+                        <span>{{ format_kz(total) }}</span>
+                    </div>
+                </div>
+
+                <div class="resumo-acoes">
+                    <a href="{{ url_for('checkout') }}" class="btn-finalizar">
+                        <i class="bi bi-check-circle-fill"></i>
+                        Finalizar Pedido
+                    </a>
+                    <a href="{{ url_for('cardapio') }}" class="btn-continuar">
+                        <i class="bi bi-plus-circle"></i>
+                        Adicionar mais
+                    </a>
+                </div>
+
+                <div class="resumo-info">
+                    <div class="info-item">
+                        <i class="bi bi-clock-fill"></i>
+                        <span>Entrega 20-30 min</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-shield-check"></i>
+                        <span>Pagamento seguro</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-geo-alt-fill"></i>
+                        <span>Luanda, Angola</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    {% else %}
+    <div class="carrinho-vazio">
+        <div class="vazio-icone"><i class="bi bi-cart-x"></i></div>
+        <div class="vazio-linha"></div>
+        <h2>O seu carrinho está vazio</h2>
+        <p>Explore o nosso cardápio e comece a pedir!</p>
+        <a class="btn-primary" href="{{ url_for('cardapio') }}">
+            <i class="bi bi-grid-3x3-gap-fill"></i> Ver Cardápio
+        </a>
+    </div>
+    {% endif %}
+
+</section>
+{% endblock %}
