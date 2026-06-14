@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Painel Admin - PRAZER BURGER{% endblock %}
+
+{% block content %}
+<section class="py-5">
+    <div class="container">
+        <h1 class="mb-4"><i class="bi bi-speedometer2"></i> Painel Administrativo</h1>
+        
+        <!-- Resumo -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card bg-primary text-white">
+                    <div class="card-body">
+                        <h5>Total Pedidos</h5>
+                        <h2>{{ pedidos|length }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-success text-white">
+                    <div class="card-body">
+                        <h5>Receita Total</h5>
+                        <h2>{{ format_kz(total_receita) }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-info text-white">
+                    <div class="card-body">
+                        <h5>Produtos</h5>
+                        <h2>{{ produtos|length }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-warning text-dark">
+                    <div class="card-body">
+                        <h5>Usuários</h5>
+                        <h2>{{ users|length }}</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pedidos -->
+        <h2 class="mb-3">Pedidos Recentes</h2>
+        {% if pedidos %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Data</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pedido in pedidos|reverse %}
+                    <tr>
+                        <td>#{{ pedido.id }}</td>
+                        <td>{{ pedido.cliente }}</td>
+                        <td>{{ pedido.data }}</td>
+                        <td>{{ format_kz(pedido.total) }}</td>
+                        <td>
+                            <span class="badge" style="background-color: {{ status_info[pedido.status].cor }};">
+                                {{ status_info[pedido.status].label }}
+                            </span>
+                        </td>
+                        <td>
+                            <form method="POST" action="{{ url_for('admin_status_pedido', pedido_id=pedido.id) }}" class="d-inline">
+                                <select name="status" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
+                                    {% for key, value in status_info.items() %}
+                                    <option value="{{ key }}" {% if key == pedido.status %}selected{% endif %}>
+                                        {{ value.label }}
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">Nenhum pedido registrado.</div>
+        {% endif %}
+        
+        <!-- Cupões -->
+        <h2 class="mb-3 mt-5">Cupões Ativos</h2>
+        <div class="row">
+            {% for codigo, dados in cupoes.items() %}
+            <div class="col-md-4 mb-3">
+                <div class="card {% if not dados.ativo %}bg-light{% endif %}">
+                    <div class="card-body">
+                        <h5>{{ codigo }}</h5>
+                        <p>
+                            {% if dados.tipo == 'percentagem' %}
+                                {{ dados.desconto }}% de desconto
+                            {% else %}
+                                {{ format_kz(dados.desconto) }} de desconto
+                            {% endif %}
+                        </p>
+                        <span class="badge {% if dados.ativo %}bg-success{% else %}bg-secondary{% endif %}">
+                            {% if dados.ativo %}Ativo{% else %}Inativo{% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}
