@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Produtos - PRAZER BURGUER{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>🍔 Gerenciar Produtos</h2>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdicionarProduto">
+                <i class="bi bi-plus-circle"></i> Adicionar Produto
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabela de Produtos -->
+    <div class="card">
+        <div class="card-body">
+            {% if produtos %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Produto</th>
+                                <th>Categoria</th>
+                                <th>Preço</th>
+                                <th>Estoque</th>
+                                <th>Vendas</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for produto in produtos %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ produto.nome }}</strong>
+                                        <br>
+                                        <small class="text-muted">{{ produto.descricao[:50] }}...</small>
+                                    </td>
+                                    <td>{{ produto.categoria|upper }}</td>
+                                    <td>
+                                        <strong>{{ format_kz(produto.preco) }}</strong>
+                                    </td>
+                                    <td>
+                                        {% if produto.estoque > 0 %}
+                                            <span class="badge bg-success">{{ produto.estoque }}</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Sem Estoque</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ produto.vendas }}</td>
+                                    <td>
+                                        {% if produto.ativo %}
+                                            <span class="badge bg-success">Ativo</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Inativo</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarProduto">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info mb-0">
+                    Nenhum produto encontrado
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal Adicionar Produto -->
+<div class="modal fade" id="modalAdicionarProduto" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Adicionar Novo Produto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('admin_criar_produto') }}" enctype="multipart/form-data">
+                {{ csrf_token() }}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nome" class="form-label">Nome do Produto</label>
+                        <input type="text" class="form-control" id="nome" name="nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descricao" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="descricao" name="descricao" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="preco" class="form-label">Preço (Kz)</label>
+                        <input type="number" class="form-control" id="preco" name="preco" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoria" class="form-label">Categoria</label>
+                        <select class="form-control" id="categoria" name="categoria" required>
+                            <option value="burgers">Burgers</option>
+                            <option value="pizzas">Pizzas</option>
+                            <option value="extras">Extras</option>
+                            <option value="bebidas">Bebidas</option>
+                            <option value="sobremesas">Sobremesas</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="estoque" class="form-label">Estoque</label>
+                        <input type="number" class="form-control" id="estoque" name="estoque" value="10" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="imagem" class="form-label">Imagem (URL ou Upload)</label>
+                        <input type="file" class="form-control" id="imagem" name="imagem" accept="image/*">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Adicionar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Produto -->
+<div class="modal fade" id="modalEditarProduto" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Produto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                {{ csrf_token() }}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="nome_edit" class="form-label">Nome do Produto</label>
+                        <input type="text" class="form-control" id="nome_edit" name="nome" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descricao_edit" class="form-label">Descrição</label>
+                        <textarea class="form-control" id="descricao_edit" name="descricao" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="preco_edit" class="form-label">Preço (Kz)</label>
+                        <input type="number" class="form-control" id="preco_edit" name="preco" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="estoque_edit" class="form-label">Estoque</label>
+                        <input type="number" class="form-control" id="estoque_edit" name="estoque" required>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="ativo_edit" name="ativo" checked>
+                            <label class="form-check-label" for="ativo_edit">
+                                Produto Ativo
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}Gerenciar Cupões - PRAZER BURGUER{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h2>🎟️ Gerenciar Cupões</h2>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdicionarCupao">
+                <i class="bi bi-plus-circle"></i> Novo Cupão
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabela de Cupões -->
+    <div class="card">
+        <div class="card-body">
+            {% if cupoes %}
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Código</th>
+                                <th>Tipo</th>
+                                <th>Desconto</th>
+                                <th>Usos</th>
+                                <th>Expiração</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cupao in cupoes %}
+                                <tr>
+                                    <td>
+                                        <strong>{{ cupao.codigo }}</strong>
+                                    </td>
+                                    <td>
+                                        {% if cupao.tipo == 'percentagem' %}
+                                            <span class="badge bg-info">Percentagem</span>
+                                        {% else %}
+                                            <span class="badge bg-success">Valor Fixo</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if cupao.tipo == 'percentagem' %}
+                                            {{ cupao.desconto }}%
+                                        {% else %}
+                                            {{ format_kz(cupao.desconto) }}
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ cupao.usos }}</td>
+                                    <td>
+                                        {% if cupao.data_expiracao %}
+                                            {{ cupao.data_expiracao.strftime('%d/%m/%Y') }}
+                                        {% else %}
+                                            <span class="text-muted">Sem prazo</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if cupao.ativo %}
+                                            <span class="badge bg-success">Ativo</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Inativo</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#modalEditarCupao">
+                                            <i class="bi bi-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="alert alert-info mb-0">
+                    Nenhum cupão encontrado
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- Modal Adicionar Cupão -->
+<div class="modal fade" id="modalAdicionarCupao" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Criar Novo Cupão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" action="{{ url_for('admin_criar_cupao') }}">
+                {{ csrf_token() }}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="codigo" class="form-label">Código do Cupão</label>
+                        <input type="text" class="form-control" id="codigo" name="codigo" placeholder="ex: BURGER10" required maxlength="20">
+                    </div>
+                    <div class="mb-3">
+                        <label for="tipo" class="form-label">Tipo de Desconto</label>
+                        <select class="form-control" id="tipo" name="tipo" required>
+                            <option value="percentagem">Percentagem (%)</option>
+                            <option value="valor">Valor Fixo (Kz)</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="desconto" class="form-label">Valor do Desconto</label>
+                        <input type="number" class="form-control" id="desconto" name="desconto" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="data_expiracao" class="form-label">Data de Expiração (Opcional)</label>
+                        <input type="date" class="form-control" id="data_expiracao" name="data_expiracao">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-success">Criar Cupão</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Cupão -->
+<div class="modal fade" id="modalEditarCupao" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Cupão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <form method="POST" enctype="multipart/form-data">
+                {{ csrf_token() }}
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">Código do Cupão</label>
+                        <input type="text" class="form-control" disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="desconto_edit" class="form-label">Valor do Desconto</label>
+                        <input type="number" class="form-control" id="desconto_edit" name="desconto" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="data_expiracao_edit" class="form-label">Data de Expiração</label>
+                        <input type="date" class="form-control" id="data_expiracao_edit" name="data_expiracao">
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="ativo_cupao_edit" name="ativo" checked>
+                            <label class="form-check-label" for="ativo_cupao_edit">
+                                Cupão Ativo
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
