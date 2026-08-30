@@ -1,5 +1,6 @@
 import os
 import uuid
+import logging
 from datetime import datetime
 from functools import wraps
 from flask_wtf.csrf import CSRFProtect
@@ -8,6 +9,14 @@ from flask_limiter.util import get_remote_address
 
 from flask import Flask, flash, redirect, render_template, request, session, url_for
 from werkzeug.security import check_password_hash, generate_password_hash
+
+# Configurar logging para stdout (compatível com Vercel/serverless)
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[logging.StreamHandler()]
+)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.update(
